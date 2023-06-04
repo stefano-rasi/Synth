@@ -1,4 +1,7 @@
 ```mermaid
+---
+title: Input
+---
 classDiagram
   class MidiInput {
     + new(device)
@@ -15,6 +18,9 @@ classDiagram
 ```
 
 ```mermaid
+---
+title: Waveforms
+---
 classDiagram
   class HarmonicsWaveform {
     + new(harmonics)
@@ -34,6 +40,9 @@ classDiagram
 ```
 
 ```mermaid
+---
+title: Envelopes
+---
 classDiagram
   class AttackReleaseEnvelope {
     + new(attack, release)
@@ -43,6 +52,9 @@ classDiagram
 ```
 
 ```mermaid
+---
+title: Sources
+---
 classDiagram
   class WaveformSource {
     + new(waveform, envelope)
@@ -58,6 +70,9 @@ classDiagram
 ```
 
 ```mermaid
+---
+title: Output
+---
 classDiagram
   class AudioOutput {
     + new(device, sample_rate)
