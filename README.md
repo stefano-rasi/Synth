@@ -6,14 +6,14 @@ classDiagram
   class MidiInput {
     + new(device)
 
-    + add_note_on(callback)
-    + add_note_off(callback)
+    + add_note_on_listener(listener)
+    + add_note_off_listener(listener)
   }
   class KeyboardInput {
     + new()
 
-    + add_note_on(callback)
-    + add_note_off(callback)
+    + add_note_on_listener(listener)
+    + add_note_off_listener(listener)
   }
 ```
 
