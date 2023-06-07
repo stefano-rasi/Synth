@@ -42,6 +42,7 @@ classDiagram
   class AttackReleaseEnvelope {
     + new(attack, release)
     + release()
+    + get_values(n)
   }
 ```
 
