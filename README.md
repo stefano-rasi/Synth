@@ -5,13 +5,11 @@ title: Input
 classDiagram
   class MidiInput {
     + new(device)
-
     + add_note_on_listener(listener)
     + add_note_off_listener(listener)
   }
   class KeyboardInput {
     + new()
-
     + add_note_on_listener(listener)
     + add_note_off_listener(listener)
   }
@@ -24,18 +22,15 @@ title: Waveforms
 classDiagram
   class HarmonicsWaveform {
     + new(harmonics)
-
-    + waveform(sample_rate, pitch)
+    + get_waveform(sample_rate, pitch)
   }
   class FormantWaveform {
     + new(formant)
-
-    + waveform(sample_rate, pitch)
+    + get_waveform(sample_rate, pitch)
   }
   class NoiseWaveform {
     + new(formant)
-
-    + waveform(sample_rate)
+    + get_waveform(sample_rate)
   }
 ```
 
@@ -46,7 +41,6 @@ title: Envelopes
 classDiagram
   class AttackReleaseEnvelope {
     + new(attack, release)
-
     + release()
   }
 ```
@@ -58,14 +52,11 @@ title: Sources
 classDiagram
   class WaveformSource {
     + new(waveform, envelope)
-
-    + samples(n)
-
+    + get_samples(n)
     + add_input(input)
     + add_output(output)
-
-    - note_on(pitch, amplitude)
-    - note_off(pitch)
+    - note_on_listener(pitch, amplitude)
+    - note_off_listener(pitch)
   }
 ```
 
@@ -76,7 +67,6 @@ title: Output
 classDiagram
   class AudioOutput {
     + new(device, sample_rate)
-
     + add_input(input)
     + add_effect(effect)
   }
