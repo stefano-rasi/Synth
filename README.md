@@ -1,3 +1,5 @@
+## Class diagram
+
 ```mermaid
 ---
 title: Input
