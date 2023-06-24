@@ -3,6 +3,21 @@ import pygame.midi
 class MidiInput:
     EVENTS = 32
 
+    def devices():
+        pygame.midi.init()
+
+        devices = []
+
+        for i in range(pygame.midi.get_count()):
+            device = pygame.midi.get_device_info(i)
+
+            if device[2] == 1:
+                devices.append(device)
+
+        pygame.midi.quit()
+
+        return devices
+
     def __init__(self, device):
         pygame.midi.init()
 

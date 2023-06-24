@@ -3,7 +3,22 @@ import pyaudio
 import numpy as np
 
 class AudioOutput:
-    def __init__(self, device, sample_rate=44100)
+    def devices():
+        p = pyaudio.PyAudio()
+
+        devices = []
+
+        for i in range(p.get_device_count()):
+            device = p.get_device_info_by_index(i)
+
+            if device['maxOutputChannels'] > 0:
+                devices.append(device)
+
+        p.terminate()
+
+        return devices
+
+    def __init__(self, device, sample_rate=44100):
         self.sources = []
 
         p = pyaudio.PyAudio()
@@ -23,7 +38,7 @@ class AudioOutput:
         self.sources.append(source)
 
     def callback(self, in_data, frame_count, time_info, status):
-        data = np.zeros(frame_count)
+        samples = np.zeros(frame_count)
 
         for source in self.sources:
             samples += source.samples(frame_count)
