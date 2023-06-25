@@ -17,5 +17,4 @@ waveform = HarmonicsWaveform([0.1, 0.04, 0.02])
 
 source = WaveformSource(waveform, input, output)
 
-while output.is_active():
-    time.sleep(0.1)
+output.start_stream()
