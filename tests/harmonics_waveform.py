@@ -13,7 +13,7 @@ from harmonics_waveform import HarmonicsWaveform
 DEVICE = 4
 SAMPLE_RATE = 44100
 
-harmonics_waveform = HarmonicsWaveform([ 0.5, 0.3, 0.4 ])
+harmonics_waveform = HarmonicsWaveform([0.5, 0.3, 0.4])
 
 waveform = harmonics_waveform.waveform(220, SAMPLE_RATE)
 
