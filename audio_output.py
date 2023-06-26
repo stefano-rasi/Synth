@@ -1,3 +1,4 @@
+import time
 import pyaudio
 
 import numpy as np
@@ -34,13 +35,8 @@ class AudioOutput:
             output_device_index=device,
         )
 
-        self.stream.start_stream()
-
     def add_source(self, source):
         self.sources.append(source)
-
-    def is_active(self):
-        return self.stream.is_active()
 
     def callback(self, in_data, frame_count, time_info, status):
         samples = np.zeros(frame_count)
@@ -49,3 +45,9 @@ class AudioOutput:
             samples += source.samples(frame_count)
 
         return (samples.clip(-1, 1).astype(np.float32), pyaudio.paContinue)
+
+    def start(self):
+        self.stream.start_stream()
+
+        while self.stream.is_active():
+            time.sleep(0.1)
