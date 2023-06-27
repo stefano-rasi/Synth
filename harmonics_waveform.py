@@ -17,6 +17,6 @@ class HarmonicsWaveform:
 
         fft[indexes] = harmonics
 
-        waveform = scipy.fftpack.irfft(fft) * wavelength/2
+        waveform = scipy.fft.irfft(fft) * wavelength/2
 
         return waveform
