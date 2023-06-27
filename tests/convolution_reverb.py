@@ -14,7 +14,7 @@ input = KeyboardInput()
 
 output = AudioOutput(DEVICE)
 
-waveform = HarmonicsWaveform([0.2, 0.08, 0.04])
+waveform = HarmonicsWaveform([0.4, 0.16, 0.08])
 
 source = WaveformSource(waveform, input, output)
 
