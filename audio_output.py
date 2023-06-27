@@ -21,6 +21,7 @@ class AudioOutput:
 
     def __init__(self, device, sample_rate=44100):
         self.sources = []
+        self.effects = []
 
         self.sample_rate = sample_rate
 
@@ -37,12 +38,18 @@ class AudioOutput:
 
     def add_source(self, source):
         self.sources.append(source)
+    
+    def add_effect(self, effect):
+        self.effects.append(effect)
 
     def callback(self, in_data, frame_count, time_info, status):
         samples = np.zeros(frame_count)
 
         for source in self.sources:
             samples += source.samples(frame_count)
+
+        for effect in self.effects:
+            samples = effect.process(samples)
 
         return (samples.clip(-1, 1).astype(np.float32), pyaudio.paContinue)
 
