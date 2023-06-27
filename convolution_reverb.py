@@ -2,12 +2,14 @@ import scipy
 import numpy as np
 
 class ConvolutionReverb:
+    LIMIT = 45000
+
     def __init__(self, file):
         wavfile = scipy.io.wavfile.read(file)
 
         samples = np.array(wavfile[1])[:,0]
 
-        samples = samples[:round(len(samples) / 10)]
+        samples = samples[:self.LIMIT]
 
         self.impulse = samples.astype(np.float32) / 2**15
 
