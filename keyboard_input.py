@@ -27,7 +27,8 @@ class KeyboardInput:
 
     def __init__(self):
         self._events = []
-        self._pressed = []
+
+        self.pressed_keys = []
 
         listener = Listener(
             on_press=self.on_press,
@@ -45,21 +46,21 @@ class KeyboardInput:
     def on_press(self, key):
         note = self.midi_note(key)
 
-        if note and key not in self._pressed:
-            self._pressed.append(key)
-
+        if note and key not in self.pressed_keys:
             self._events.append({
                 'note': note,
                 'event': MidiInput.NOTE_ON,
                 'velocity': self.VELOCITY
             })
 
+            self.pressed_keys.append(key)
+
     def on_release(self, key):
         note = self.midi_note(key)
 
         if note:
-            if key in self._pressed:
-                self._pressed.remove(key)
+            if key in self.pressed_keys:
+                self.pressed_keys.remove(key)
 
             self._events.append({
                 'note': note,

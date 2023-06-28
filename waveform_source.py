@@ -3,15 +3,12 @@ import numpy as np
 from midi_input import MidiInput
 
 class WaveformSource:
-    def __init__(self, waveform, midi_input, audio_output, envelope=None):
+    def __init__(self, waveform, midi_input, envelope=None):
         self.notes = []
 
         self.waveform = waveform
+
         self.midi_input = midi_input
-
-        self.sample_rate = audio_output.sample_rate
-
-        audio_output.add_source(self)
 
     def samples(self, frame_count):
         events = self.midi_input.events()
@@ -22,12 +19,12 @@ class WaveformSource:
 
                 pitch = MidiInput.midi_to_frequency(note)
 
-                waveform = self.waveform.waveform(pitch, self.sample_rate)
+                waveform = self.waveform.samples(pitch, self.sample_rate)
 
                 self.notes.append({
-                    't': 0,
                     'note': note,
                     'pitch': pitch,
+                    'counter': 0,
                     'waveform': waveform
                 })
             elif event['event'] == MidiInput.NOTE_OFF:
@@ -38,12 +35,12 @@ class WaveformSource:
         samples = np.zeros(frame_count)
 
         for note in self.notes:
-            t = note['t']
+            counter = note['counter']
 
-            waveform_range = range(t, t + frame_count)
+            waveform_range = range(counter, counter + frame_count)
 
             samples += note['waveform'].take(waveform_range, mode='wrap')
 
-            note['t'] += frame_count
+            note['counter'] += frame_count
 
         return samples

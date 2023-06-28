@@ -2,18 +2,20 @@ import scipy
 import numpy as np
 
 class ConvolutionReverb:
-    LIMIT = 45000
+    LIMIT = 60000
 
     def __init__(self, file):
         wavfile = scipy.io.wavfile.read(file)
 
-        samples = np.array(wavfile[1])[:,0]
+        mono_samples = np.array(wavfile[1])[:,0]
 
-        samples = samples[:self.LIMIT]
+        impulse = mono_samples[:self.LIMIT].astype(np.float32) / 2**15
 
-        self.impulse = samples.astype(np.float32) / 2**15
+        self.window = np.zeros(len(impulse))
 
-        self.window = np.zeros(len(self.impulse))
+        self.impulse_fft = scipy.fft.rfft(impulse)
+
+        self.impulse_fft_amax = np.amax(self.impulse_fft)
 
     def process(self, samples):
         self.window = np.roll(self.window, -len(samples))
@@ -21,8 +23,7 @@ class ConvolutionReverb:
         self.window[-len(samples):] = samples
 
         window_fft = scipy.fft.rfft(self.window)
-        impulse_fft = scipy.fft.rfft(self.impulse)
 
-        convolution = scipy.fft.irfft(window_fft * impulse_fft / np.amax(impulse_fft))
+        convolution = scipy.fft.irfft(window_fft * self.impulse_fft / self.impulse_fft_amax)
 
         return convolution[-len(samples):]

@@ -19,7 +19,7 @@ class AudioOutput:
 
         return devices
 
-    def __init__(self, device, sample_rate=44100):
+    def __init__(self, device_index, sample_rate=44100):
         self.sources = []
         self.effects = []
 
@@ -33,11 +33,13 @@ class AudioOutput:
             format=pyaudio.paFloat32,
             channels=1,
             stream_callback=self.callback,
-            output_device_index=device,
+            output_device_index=device_index,
         )
 
     def add_source(self, source):
         self.sources.append(source)
+
+        source.sample_rate = self.sample_rate
     
     def add_effect(self, effect):
         self.effects.append(effect)
