@@ -22,9 +22,9 @@ class WaveformSource:
                 waveform = self.waveform.samples(pitch, self.sample_rate)
 
                 self.notes.append({
+                    't': 0,
                     'note': note,
                     'pitch': pitch,
-                    'counter': 0,
                     'waveform': waveform
                 })
             elif event['event'] == MidiInput.NOTE_OFF:
@@ -35,12 +35,10 @@ class WaveformSource:
         samples = np.zeros(frame_count)
 
         for note in self.notes:
-            counter = note['counter']
-
-            waveform_range = range(counter, counter + frame_count)
+            waveform_range = range(note['t'], note['t'] + frame_count)
 
             samples += note['waveform'].take(waveform_range, mode='wrap')
 
-            note['counter'] += frame_count
+            note['t'] += frame_count
 
         return samples
