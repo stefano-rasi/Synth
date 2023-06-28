@@ -1,3 +1,4 @@
-__pycache__
+impulses/*
+instruments/*
 
-reverb/*
+__pycache__
