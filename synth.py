@@ -4,7 +4,7 @@ import time
 
 import importlib
 
-sys.path.insert(0, 'lib')
+sys.path.insert(0, 'synth')
 
 from audio_output import AudioOutput
 from keyboard_input import KeyboardInput
