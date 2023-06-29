@@ -25,6 +25,7 @@ name = path.strip('.\\').strip('.py').replace('\\', '.')
 module = importlib.import_module(name)
 
 midi_input = KeyboardInput()
+
 audio_output = AudioOutput(device)
 
 module.Sound(midi_input, audio_output, SAMPLE_RATE)
