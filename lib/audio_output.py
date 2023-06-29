@@ -1,4 +1,5 @@
 import time
+
 import pyaudio
 
 import numpy as np
@@ -43,6 +44,10 @@ class AudioOutput:
     
     def add_effect(self, effect):
         self.effects.append(effect)
+
+    def reset(self):
+        self.sources = []
+        self.effects = []
 
     def callback(self, in_data, frame_count, time_info, status):
         samples = np.zeros(frame_count)

@@ -1,4 +1,5 @@
 import scipy
+
 import numpy as np
 
 class HarmonicsWaveform:

@@ -1,4 +1,5 @@
 import scipy
+
 import numpy as np
 
 class ConvolutionReverb:
@@ -7,11 +8,11 @@ class ConvolutionReverb:
     def __init__(self, file):
         wavfile = scipy.io.wavfile.read(file)
 
-        mono_samples = np.array(wavfile[1])[:,0]
+        mono = np.array(wavfile[1])[:,0]
 
-        length = min(self.LIMIT, len(mono_samples))
+        length = min(self.LIMIT, len(mono))
 
-        impulse = mono_samples[:length].astype(np.float32) / 2**15
+        impulse = mono[:length].astype(np.float32) / 2**15
 
         self.window = np.zeros(len(impulse))
 
