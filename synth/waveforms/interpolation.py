@@ -39,6 +39,6 @@ class InterpolationWaveform:
         stop_waveform = waveform_stop['waveform'].waveform(pitch, sample_rate)
         start_waveform = waveform_start['waveform'].waveform(pitch, sample_rate)
 
-        waveform = stop_amplitude * stop_waveform + start_amplitude * start_waveform
+        waveform = start_amplitude * start_waveform + stop_amplitude * stop_waveform
 
         return waveform
