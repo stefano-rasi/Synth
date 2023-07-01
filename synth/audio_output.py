@@ -14,7 +14,7 @@ class AudioOutput:
             device = p.get_device_info_by_index(i)
 
             if device['maxOutputChannels'] > 0:
-                devices.append(device)
+                devices.append([i, device['name']])
 
         p.terminate()
 
