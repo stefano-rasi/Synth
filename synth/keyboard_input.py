@@ -1,8 +1,10 @@
 from midi_input import MidiInput
 
-from pynput.keyboard import Listener
+from pynput.keyboard import Key, Listener
 
 class KeyboardInput:
+    OCTAVE = 4
+
     VELOCITY = 100
 
     NOTES = {
@@ -30,6 +32,8 @@ class KeyboardInput:
 
         self.pressed_keys = []
 
+        self.octave = self.OCTAVE
+
         listener = Listener(
             on_press=self.on_press,
             on_release=self.on_release
@@ -39,11 +43,18 @@ class KeyboardInput:
 
     def midi_note(self, key):
         if hasattr(key, 'char') and key.char in self.NOTES:
-            return 60 + self.NOTES[key.char]
+            note = 12 * (self.octave + 1) + self.NOTES[key.char]
+
+            return note
         else:
             return None
 
     def on_press(self, key):
+        if key == Key.up:
+            self.octave += 1
+        elif key == Key.down:
+            self.octave -= 1
+
         note = self.midi_note(key)
 
         if note and key not in self.pressed_keys:
