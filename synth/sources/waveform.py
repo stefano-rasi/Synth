@@ -2,6 +2,8 @@ import numpy as np
 
 from midi_input import MidiInput
 
+from utils import midi_to_frequency
+
 class WaveformSource:
     def __init__(self, waveform, midi_input, envelope=None):
         self.notes = []
@@ -19,14 +21,14 @@ class WaveformSource:
             if event['event'] == MidiInput.NOTE_ON:
                 note = event['note']
 
-                pitch = MidiInput.midi_to_frequency(note)
+                pitch = midi_to_frequency(note)
 
                 if self.envelope:
                     envelope = self.envelope.build_envelope()
                 else:
                     envelope = None
 
-                waveform = self.waveform.samples(pitch, self.sample_rate)
+                waveform = self.waveform.waveform(pitch, self.sample_rate)
 
                 self.notes.append({
                     't': 0,

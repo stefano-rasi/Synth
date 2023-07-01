@@ -2,7 +2,7 @@ import scipy
 
 import numpy as np
 
-class ConvolutionReverb:
+class Convolution:
     LIMIT = 60000
 
     def __init__(self, file):

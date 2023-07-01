@@ -43,6 +43,3 @@ class MidiInput:
             })
 
         return events
-
-    def midi_to_frequency(note):
-        return 440 * pow(2, (note - 69) / 12)

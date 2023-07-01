@@ -6,7 +6,7 @@ class HarmonicsWaveform:
     def __init__(self, harmonics):
         self.harmonics = harmonics
 
-    def samples(self, pitch, sample_rate):
+    def waveform(self, pitch, sample_rate):
         harmonics = np.insert(self.harmonics, 0, 0)
         harmonics = harmonics[:int(round(sample_rate/2 / pitch))]
 
@@ -18,6 +18,6 @@ class HarmonicsWaveform:
 
         harmonics_fft[harmonics_indexes] = harmonics
 
-        samples = scipy.fft.irfft(harmonics_fft) * wavelength/2
+        waveform = scipy.fft.irfft(harmonics_fft) * wavelength/2
 
-        return samples
+        return waveform
