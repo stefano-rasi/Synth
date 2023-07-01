@@ -1,10 +1,12 @@
 import pygame.midi
 
+from utils import power_to_amplitude
+
 class MidiInput:
     EVENTS = 32
 
-    NOTE_ON = 0x9C
-    NOTE_OFF = 0x8C
+    NOTE_ON = 144
+    NOTE_OFF = 128
 
     def devices():
         pygame.midi.init()
@@ -15,7 +17,7 @@ class MidiInput:
             device = pygame.midi.get_device_info(i)
 
             if device[2] == 1:
-                devices.append(device)
+                devices.append([i, device])
 
         pygame.midi.quit()
 
@@ -35,6 +37,9 @@ class MidiInput:
             note = midi_event[0][1]
             event = midi_event[0][0]
             velocity = midi_event[0][2]
+
+            if velocity == 0:
+                event = self.NOTE_OFF
 
             events.append({
                 'note': note,
