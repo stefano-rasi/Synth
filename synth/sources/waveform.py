@@ -2,10 +2,10 @@ import numpy as np
 
 from midi_input import MidiInput
 
-from utils import midi_to_frequency
+from utils import midi_to_pitch
 
 class WaveformSource:
-    def __init__(self, waveform, midi_input, envelope=None):
+    def __init__(self, waveform, midi_input, envelope=None, velocity_curve=None):
         self.notes = []
 
         self.waveform = waveform
@@ -14,6 +14,8 @@ class WaveformSource:
 
         self.midi_input = midi_input
 
+        self.velocity_curve = velocity_curve.interpolate(128)
+
     def samples(self, frame_count):
         events = self.midi_input.events()
 
@@ -21,7 +23,14 @@ class WaveformSource:
             if event['event'] == MidiInput.NOTE_ON:
                 note = event['note']
 
-                pitch = midi_to_frequency(note)
+                pitch = midi_to_pitch(note)
+
+                velocity = event['velocity']
+
+                if self.velocity_curve is None:
+                    amplitude = velocity / 127
+                else:
+                    amplitude = self.velocity_curve[velocity]
 
                 if self.envelope:
                     envelope = self.envelope.build_envelope()
@@ -35,7 +44,8 @@ class WaveformSource:
                     'note': note,
                     'pitch': pitch,
                     'envelope': envelope,
-                    'waveform': waveform
+                    'waveform': waveform,
+                    'amplitude': amplitude
                 })
             elif event['event'] == MidiInput.NOTE_OFF:
                 notes = [n for n in self.notes if n['note'] == event['note']]
@@ -49,19 +59,21 @@ class WaveformSource:
         samples = np.zeros(frame_count)
 
         for note in self.notes[:]:
+            amplitude = note['amplitude']
+
             waveform_range = range(note['t'], note['t'] + frame_count)
 
             waveform_samples = note['waveform'].take(waveform_range, mode='wrap')
 
             if note['envelope']:
-                envelope_samples = note['envelope'].take(frame_count)
+                envelope = note['envelope'].take(frame_count)
 
-                if envelope_samples is False:
+                if envelope is False:
                     self.notes.remove(note)
                 else:
-                    samples += envelope_samples * waveform_samples
+                    samples += amplitude * envelope * waveform_samples
             else:
-                samples += waveform_samples
+                samples += amplitude * waveform_samples
 
             note['t'] += frame_count
 
