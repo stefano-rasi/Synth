@@ -56,7 +56,7 @@ name = path.strip('.\\').strip('.py').replace('\\', '.')
 
 module = importlib.import_module(name)
 
-module.Sound(midi_input, audio_output, sample_rate)
+module.Instrument(midi_input, audio_output, sample_rate)
 
 audio_output.stream.start_stream()
 
@@ -70,6 +70,6 @@ while audio_output.stream.is_active():
 
         importlib.reload(module)
 
-        module.Sound(midi_input, audio_output, sample_rate)
+        module.Instrument(midi_input, audio_output, sample_rate)
     else:
         time.sleep(0.1)
