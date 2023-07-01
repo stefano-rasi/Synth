@@ -18,23 +18,37 @@ class InterpolationWaveform:
                 if not waveform_start:
                     waveform_start = waveform
 
-        pitch_log = math.log2(pitch)
+        if not waveform_stop:
+            waveform_stop = self.waveforms[-1]
+
+        if not waveform_start:
+            waveform_start = self.waveforms[0]
 
         pitch_stop = waveform_stop['pitch']
         pitch_start = waveform_start['pitch']
 
-        pitch_stop_log = math.log2(pitch_stop)
-        pitch_start_log = math.log2(pitch_start)
-
-        stop_power = (pitch_stop_log - pitch_log) / (pitch_stop_log - pitch_start_log)
-        start_power = 1 - stop_power
-
-        if stop_power > start_power:
-            stop_amplitude = power_to_amplitude(stop_power)
-            start_amplitude = 1 - stop_amplitude
+        if pitch >= pitch_stop:
+            stop_amplitude = 1
+            start_amplitude = 0
+        elif pitch <= pitch_start:
+            stop_amplitude = 0
+            start_amplitude = 1
         else:
+            pitch_log = math.log2(pitch)
+
+            pitch_stop_log = math.log2(pitch_stop)
+            pitch_start_log = math.log2(pitch_start)
+
+            start_power = (pitch_stop_log - pitch_log) / (pitch_stop_log - pitch_start_log)
+            stop_power = 1 - start_power
+
+            stop_amplitude = power_to_amplitude(stop_power)
             start_amplitude = power_to_amplitude(start_power)
-            stop_amplitude = 1 - start_amplitude
+
+            amplitude_factor = 1 / (start_amplitude + stop_amplitude)
+
+            stop_amplitude *= amplitude_factor
+            start_amplitude *= amplitude_factor
 
         stop_waveform = waveform_stop['waveform'].waveform(pitch, sample_rate)
         start_waveform = waveform_start['waveform'].waveform(pitch, sample_rate)
