@@ -1,5 +1,4 @@
 tests/*
-sounds/*
-impulses/*
+instruments/*
 
 __pycache__
