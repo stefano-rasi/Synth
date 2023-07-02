@@ -2,7 +2,7 @@ import scipy
 
 import numpy as np
 
-class LinearInterpolation:
+class LinearCurve:
     def __init__(self, points):
         self.x = np.array(points)[:,0]
         self.y = np.array(points)[:,1]
