@@ -14,7 +14,7 @@ class WaveformSource:
 
         self.midi_input = midi_input
 
-        self.velocity_curve = velocity_curve.interpolate(128)
+        self.velocity_curve = velocity_curve
 
     def samples(self, frame_count):
         events = self.midi_input.events()
