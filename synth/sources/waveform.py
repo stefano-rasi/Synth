@@ -55,9 +55,10 @@ class WaveformSource:
 
                 if notes:
                     for note in notes:
-                        note['envelope'].released = True
-                else:
-                    self.notes = [n for n in self.notes if not n['note'] == event['note']]
+                        if note['envelope']:
+                            note['envelope'].released = True
+                        else:
+                            self.notes = [n for n in self.notes if not n['note'] == event['note']]
 
         samples = np.zeros(frame_count)
 
