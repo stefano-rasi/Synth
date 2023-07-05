@@ -12,8 +12,6 @@ from midi_input import MidiInput
 from audio_output import AudioOutput
 from keyboard_input import KeyboardInput
 
-pp = pprint.PrettyPrinter()
-
 parser = argparse.ArgumentParser(prog='synth')
 
 parser.add_argument('path', nargs='?')
@@ -26,6 +24,8 @@ parser.add_argument('-I', '--input_devices', action='store_true')
 parser.add_argument('-O', '--output_devices', action='store_true')
 
 args = parser.parse_args()
+
+pp = pprint.PrettyPrinter()
 
 if args.input_devices:
     pp.pprint(MidiInput.devices())
@@ -56,7 +56,7 @@ name = path.strip('.\\').strip('.py').replace('\\', '.')
 
 module = importlib.import_module(name)
 
-module.Instrument(midi_input, audio_output, sample_rate)
+module.Sound(midi_input, audio_output, sample_rate)
 
 audio_output.stream.start_stream()
 
@@ -70,6 +70,6 @@ while audio_output.stream.is_active():
 
         importlib.reload(module)
 
-        module.Instrument(midi_input, audio_output, sample_rate)
+        module.Sound(midi_input, audio_output, sample_rate)
     else:
         time.sleep(0.1)
