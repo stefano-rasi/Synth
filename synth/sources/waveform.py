@@ -1,20 +1,23 @@
 import numpy as np
 
-from midi_input import MidiInput
-
 from utils import midi_to_pitch
 
+from midi_input import MidiInput
+
 class WaveformSource:
-    def __init__(self, waveform, midi_input, envelope=None, velocity_curve=None):
+    def __init__(self, waveform, midi_input, envelope_factory=None, velocity_curve=None):
         self.notes = []
 
         self.waveform = waveform
 
-        self.envelope = envelope
-
         self.midi_input = midi_input
 
-        self.velocity_curve = velocity_curve
+        self.envelope_factory = envelope_factory
+
+        if velocity_curve:
+            self.velocity_curve = velocity_curve.interpolate(128)
+        else:
+            self.velocity_curve = None
 
     def samples(self, frame_count):
         events = self.midi_input.events()
@@ -27,13 +30,13 @@ class WaveformSource:
 
                 velocity = event['velocity']
 
-                if self.velocity_curve is None:
-                    amplitude = velocity / 127
-                else:
+                if self.velocity_curve is not None:
                     amplitude = self.velocity_curve[velocity]
+                else:
+                    amplitude = velocity / 127
 
-                if self.envelope:
-                    envelope = self.envelope.build_envelope()
+                if self.envelope_factory:
+                    envelope = self.envelope_factory.build_envelope()
                 else:
                     envelope = None
 
