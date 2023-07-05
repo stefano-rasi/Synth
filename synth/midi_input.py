@@ -38,7 +38,7 @@ class MidiInput:
             event = midi_event[0][0]
             velocity = midi_event[0][2]
 
-            if velocity == 0:
+            if event == self.NOTE_ON and velocity == 0:
                 event = self.NOTE_OFF
 
             events.append({
