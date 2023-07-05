@@ -1,90 +1,87 @@
 import numpy as np
 
 class EnvelopeFactory:
-    def __init__(self, attack, release=[]):
+    def __init__(self, attack, decay=[], release=[]):
+        self.decay = decay
         self.attack = attack
         self.release = release
 
     def build_envelope(self):
-        return Envelope(self.attack, self.release)
+        return Envelope(self.attack, self.decay, self.release)
 
 class Envelope:
-    def __init__(self, attack, release=[]):
+    def __init__(self, attack=[], decay=[], release=[]):
         self.a = 0
+        self.d = 0
         self.r = 0
 
+        self.decay = np.array(decay)
         self.attack = np.array(attack)
         self.release = np.array(release)
 
         self.released = False
 
-        self.last_attack = 0
+        self.last_decay = 1
+        self.last_attack = 1
 
     def take(self, frame_count):
         if not self.released and self.a < len(self.attack):
-            attack_start = self.a
-            attack_stop = self.a + frame_count
+            stop = self.a + frame_count
+            start = self.a
 
-            if self.released and (attack_stop >= len(self.attack)):
-                samples = np.empty(frame_count)
+            self.a += frame_count
 
-                attack_stop = len(self.attack)
-
-                attack_length = attack_stop - attack_start
-
-                samples[:attack_length] = self.attack[attack_start:attack_stop]
-
-                self.a += attack_length
-
-                if self.release.size:
-                    release_length = frame_count - attack_length
-
-                    release_start = self.r
-                    release_stop = self.r + release_length
-
-                    samples[attack_length:] = self.release[release_start:release_stop]
-
-                    self.r += release_length
-
-                self.last_attack = samples[-1]
-
-                return samples
-            else:
-                self.a += frame_count
-
-                samples = self.attack.take(range(attack_start, attack_stop), mode='clip')
-
-                self.last_attack = samples[-1]
-
-                return samples
-        elif not self.released:
-            samples = np.repeat(self.attack[-1], frame_count)
+            samples = self.attack.take(range(start, stop), mode='clip')
 
             self.last_attack = samples[-1]
+
+            return samples
+        elif not self.released and self.d < len(self.decay):
+            stop = self.d + frame_count
+            start = self.d
+
+            self.d += frame_count
+
+            samples = self.decay.take(range(start, stop), mode='clip')
+
+            self.last_decay = samples[-1]
+
+            return samples
+        elif not self.released:
+            if self.last_decay:
+                samples = np.repeat(self.last_decay, frame_count)
+            else:
+                samples = np.repeat(self.last_attack, frame_count)
 
             return samples
         elif self.release.size:
             if self.r >= len(self.release):
                 return False
             elif self.r + frame_count < len(self.release):
-                release_start = self.r
-                release_stop = self.r + frame_count
+                stop = self.r + frame_count
+                start = self.r
 
                 self.r += frame_count
 
-                release_samples = self.release[release_start:release_stop]
+                samples = self.release[start:stop]
 
-                return self.last_attack * release_samples
+                if self.last_decay:
+                    return self.last_decay * samples
+                else:
+                    return self.last_attack * samples
             else:
-                release_samples = np.zeros(frame_count)
+                samples = np.zeros(frame_count)
 
-                release_start = self.r
-                release_stop = min(self.r + frame_count, len(self.release))
+                stop = min(self.r + frame_count, len(self.release))
+                start = self.r
 
-                release_samples[:release_stop-release_start] = self.release[release_start:release_stop]
+                samples[:stop-start] = self.release[start:stop]
 
                 self.r += frame_count
 
-                return self.last_attack * release_samples
+                if self.last_decay:
+                    return self.last_decay * samples
+                else:
+                    return self.last_attack * samples
         else:
             return False
