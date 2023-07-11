@@ -2,7 +2,7 @@ import math
 
 from utils import power_to_amplitude
 
-class InterpolationWaveform:
+class PitchWaveform:
     def __init__(self, waveforms):
         self.waveforms = waveforms
 
@@ -15,8 +15,7 @@ class InterpolationWaveform:
                 if not waveform_stop:
                     waveform_stop = waveform
             if pitch >= waveform['pitch']:
-                if not waveform_start:
-                    waveform_start = waveform
+                waveform_start = waveform
 
         if not waveform_stop:
             waveform_stop = self.waveforms[-1]

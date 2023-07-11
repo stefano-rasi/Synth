@@ -52,7 +52,11 @@ audio_output = AudioOutput(output_device, sample_rate)
 
 mtime = os.path.getmtime(path)
 
-name = path.strip('.\\').strip('.py').replace('\\', '.')
+name = path.strip('./') \
+           .strip('.\\') \
+           .strip('.py') \
+           .replace('/', '.') \
+           .replace('\\', '.')
 
 module = importlib.import_module(name)
 
@@ -66,7 +70,8 @@ while audio_output.stream.is_active():
     if new_mtime != mtime:
         mtime = new_mtime
 
-        audio_output.reset()
+        audio_output.effects = []
+        audio_output.sources = []
 
         importlib.reload(module)
 

@@ -5,24 +5,22 @@ from utils import midi_to_pitch
 from midi_input import MidiInput
 
 class WaveformSource:
-    def __init__(self, waveform, midi_input, envelope_factory=None, velocity_curve=None):
+    def __init__(self, waveform, sample_rate, envelope=None, velocity=None):
         self.notes = []
+        self.events = []
 
         self.waveform = waveform
+        self.envelope = envelope
 
-        self.midi_input = midi_input
+        self.sample_rate = sample_rate
 
-        self.envelope_factory = envelope_factory
-
-        if velocity_curve:
-            self.velocity_curve = velocity_curve.interpolate(128)
+        if velocity:
+            self.velocity = velocity.interpolate(128)
         else:
-            self.velocity_curve = None
+            self.velocity = None
 
     def samples(self, frame_count):
-        events = self.midi_input.events()
-
-        for event in events:
+        for event in self.events:
             if event['event'] == MidiInput.NOTE_ON:
                 note = event['note']
 
@@ -30,13 +28,13 @@ class WaveformSource:
 
                 velocity = event['velocity']
 
-                if self.velocity_curve is not None:
-                    amplitude = self.velocity_curve[velocity]
+                if self.velocity is not None:
+                    amplitude = self.velocity[velocity]
                 else:
                     amplitude = velocity / 127
 
-                if self.envelope_factory:
-                    envelope = self.envelope_factory.build_envelope()
+                if self.envelope:
+                    envelope = self.envelope.build_envelope()
                 else:
                     envelope = None
 
@@ -53,12 +51,13 @@ class WaveformSource:
             elif event['event'] == MidiInput.NOTE_OFF:
                 notes = [n for n in self.notes if n['note'] == event['note']]
 
-                if notes:
-                    for note in notes:
-                        if note['envelope']:
-                            note['envelope'].released = True
-                        else:
-                            self.notes = [n for n in self.notes if not n['note'] == event['note']]
+                for note in notes:
+                    if note['envelope']:
+                        note['envelope'].released = True
+                    else:
+                        self.notes = [n for n in self.notes if not n['note'] == event['note']]
+
+        self.events.clear()
 
         samples = np.zeros(frame_count)
 

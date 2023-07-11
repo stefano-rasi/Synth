@@ -20,9 +20,9 @@ class Formant:
         max_freq = self.max_freq
 
         if self.log:
-            min_freq_log = log(2, min_freq)
+            min_freq_log = np.log2(min_freq)
 
-            freq_range = log(2, max_freq) - log(base, min_freq)
+            freq_range = np.log2(max_freq) - np.log2(min_freq)
 
             freq_xs = np.power(2, xs * freq_range + min_freq_log) / max_freq
         else:

@@ -1,8 +1,11 @@
+import math
 import scipy
 
 import numpy as np
 
 class FormantWaveform:
+    SCALE = 4
+
     def __init__(self, formant, sample_rate, harmonics=None):
         self.harmonics = harmonics
 
@@ -16,11 +19,11 @@ class FormantWaveform:
         else:
             harmonics = self.harmonics[:max_freq]
 
-        wavelength = int(round(sample_rate / pitch * 2))
+        wavelength = int(round(sample_rate / pitch * self.SCALE))
 
         harmonics_fft = np.zeros(wavelength)
 
-        harmonics_indexes = 4 * np.arange(len(harmonics), dtype=int)
+        harmonics_indexes = 2 * self.SCALE * np.arange(len(harmonics), dtype=int)
 
         harmonics_frequencies = pitch * np.arange(1, len(harmonics) + 1)
 

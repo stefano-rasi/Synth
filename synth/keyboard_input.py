@@ -28,7 +28,7 @@ class KeyboardInput:
     }
 
     def __init__(self):
-        self._events = []
+        self.sources = []
 
         self.pressed_keys = []
 
@@ -58,13 +58,14 @@ class KeyboardInput:
         note = self.midi_note(key)
 
         if note and key not in self.pressed_keys:
-            self._events.append({
-                'note': note,
-                'event': MidiInput.NOTE_ON,
-                'velocity': self.VELOCITY
-            })
-
             self.pressed_keys.append(key)
+
+            for source in self.sources:
+                source.events.append({
+                    'note': note,
+                    'event': MidiInput.NOTE_ON,
+                    'velocity': self.VELOCITY
+                })
 
     def on_release(self, key):
         note = self.midi_note(key)
@@ -73,15 +74,9 @@ class KeyboardInput:
             if key in self.pressed_keys:
                 self.pressed_keys.remove(key)
 
-            self._events.append({
-                'note': note,
-                'event': MidiInput.NOTE_OFF,
-                'velocity': self.VELOCITY
-            })
-
-    def events(self):
-        events = self._events[:]
-
-        self._events.clear()
-
-        return events
+            for source in self.sources:
+                source.events.append({
+                    'note': note,
+                    'event': MidiInput.NOTE_OFF,
+                    'velocity': self.VELOCITY
+                })
