@@ -46,12 +46,11 @@ class Envelope:
 
             self.last_decay = samples[-1]
 
-            return samples
+            return self.last_attack * samples
         elif not self.released:
-            if self.last_decay:
-                samples = np.repeat(self.last_decay, frame_count)
-            else:
-                samples = np.repeat(self.last_attack, frame_count)
+            sample = self.last_attack * self.last_decay
+
+            samples = np.repeat(sample, frame_count)
 
             return samples
         elif self.release.size:
@@ -65,10 +64,7 @@ class Envelope:
 
                 samples = self.release[start:stop]
 
-                if self.last_decay:
-                    return self.last_decay * samples
-                else:
-                    return self.last_attack * samples
+                return self.last_attack * self.last_decay * samples
             else:
                 samples = np.zeros(frame_count)
 
@@ -79,9 +75,6 @@ class Envelope:
 
                 self.r += frame_count
 
-                if self.last_decay:
-                    return self.last_decay * samples
-                else:
-                    return self.last_attack * samples
+                return self.last_attack * self.last_decay * samples
         else:
             return False
