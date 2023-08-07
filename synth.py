@@ -4,9 +4,12 @@ import time
 
 import pprint
 import argparse
-import importlib
 
-sys.path.insert(0, 'synth')
+from bs4 import BeautifulSoup
+
+sys.path.insert(0, 'lib')
+
+from nodes.sound import SoundNode
 
 from midi_input import MidiInput
 from audio_output import AudioOutput
@@ -52,15 +55,12 @@ audio_output = AudioOutput(output_device, sample_rate)
 
 mtime = os.path.getmtime(path)
 
-name = path.strip('./') \
-           .strip('.\\') \
-           .strip('.py') \
-           .replace('/', '.') \
-           .replace('\\', '.')
+with open(path, 'r') as f:
+	xml = f.read() 
 
-module = importlib.import_module(name)
+root = BeautifulSoup(xml, 'xml')
 
-module.Sound(midi_input, audio_output, sample_rate)
+SoundNode(root, midi_input, audio_output)
 
 audio_output.stream.start_stream()
 
@@ -70,11 +70,11 @@ while audio_output.stream.is_active():
     if new_mtime != mtime:
         mtime = new_mtime
 
-        audio_output.effects = []
-        audio_output.sources = []
+        audio_output.effects.clear()
+        audio_output.sources.clear()
 
-        importlib.reload(module)
+        root = BeautifulSoup(xml, 'xml')
 
-        module.Sound(midi_input, audio_output, sample_rate)
+        SoundNode(root, midi_input, audio_output)
     else:
         time.sleep(0.1)
