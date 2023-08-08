@@ -1,8 +1,10 @@
 import numpy as np
 
-from utils import midi_to_pitch
-
 from midi_input import MidiInput
+
+from utils.midi import midi_to_pitch
+
+from nodes.envelope import EnvelopeNode
 
 class WaveformSource:
     def __init__(self, waveform, sample_rate, envelope=None, velocity=None):
@@ -34,7 +36,7 @@ class WaveformSource:
                     amplitude = velocity / 127
 
                 if self.envelope:
-                    envelope = self.envelope.build_envelope()
+                    envelope = self.envelope.envelope()
                 else:
                     envelope = None
 

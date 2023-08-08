@@ -73,6 +73,9 @@ while audio_output.stream.is_active():
         audio_output.effects.clear()
         audio_output.sources.clear()
 
+        with open(path, 'r') as f:
+	        xml = f.read() 
+
         root = BeautifulSoup(xml, 'xml')
 
         SoundNode(root, midi_input, audio_output)

@@ -1,12 +1,12 @@
 import numpy as np
 
 class EnvelopeFactory:
-    def __init__(self, attack, decay=[], release=[]):
+    def __init__(self, attack=[], decay=[], release=[]):
         self.decay = decay
         self.attack = attack
         self.release = release
 
-    def build_envelope(self):
+    def envelope(self):
         return Envelope(self.attack, self.decay, self.release)
 
 class Envelope:

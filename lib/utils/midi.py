@@ -14,8 +14,3 @@ def note_to_pitch(name):
 
 def midi_to_pitch(note):
     return 440 * pow(2, (note - 69) / 12)
-
-def power_to_amplitude(samples, min_db=-60):
-    db = samples * (-min_db) + min_db
-
-    return (10 ** (db / 20))

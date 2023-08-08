@@ -3,8 +3,6 @@ import threading
 
 import pygame.midi
 
-from utils import power_to_amplitude
-
 class MidiInput:
     EVENTS = 32
 
