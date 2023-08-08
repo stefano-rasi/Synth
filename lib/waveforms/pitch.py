@@ -2,7 +2,7 @@ import math
 
 from utils.audio import power_to_amplitude
 
-class PitchInterpolationWaveform:
+class PitchWaveform:
     def __init__(self, waveforms):
         self.waveforms = waveforms
 

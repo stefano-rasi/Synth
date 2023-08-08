@@ -14,7 +14,7 @@ class LinearInterpolationNode:
         points = yaml.safe_load(tag.text)
 
         for x in points:
-            points[x] = points[x] / y_max
+           points[x] = points[x] / y_max
 
         points_array = np.array(list(points.items()))
 

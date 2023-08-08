@@ -7,8 +7,6 @@ from utils.audio import power_to_amplitude
 from waveforms.harmonics import HarmonicsWaveform
 
 class HarmonicsWaveformNode:
-    HARMONICS = 1000
-
     def __init__(self, tag):
         harmonics_tag = tag.find('harmonics')
 

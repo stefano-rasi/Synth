@@ -5,14 +5,16 @@ from sources.waveform import WaveformSource
 
 class WaveformSourceNode:
     def __init__(self, tag, midi_input, audio_output):
+        sample_rate = audio_output.sample_rate
+
         waveform_tag = tag.find('waveform')
 
-        waveform_node = WaveformNode(waveform_tag)
+        waveform_node = WaveformNode(waveform_tag, sample_rate)
 
         waveform = waveform_node.waveform
 
         if tag.find('envelope'):
-            envelope_node = EnvelopeNode(tag.find('envelope'), audio_output.sample_rate)
+            envelope_node = EnvelopeNode(tag.find('envelope'), sample_rate)
 
             envelope = envelope_node.envelope
         else:

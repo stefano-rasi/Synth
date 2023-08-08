@@ -17,7 +17,7 @@ class EnvelopeNode:
 
             attack = attack_curve.interpolate(attack_length)
         else:
-            attack = ]
+            attack = []
 
         if tag.find('decay'):
             decay_tag = tag.find('decay')
