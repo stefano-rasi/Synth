@@ -4,8 +4,6 @@ from midi_input import MidiInput
 
 from utils.midi import midi_to_pitch
 
-from nodes.envelope import EnvelopeNode
-
 class WaveformSource:
     def __init__(self, waveform, sample_rate, envelope=None, velocity=None):
         self.notes = []

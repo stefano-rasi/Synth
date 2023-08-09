@@ -1,8 +1,8 @@
 from nodes.formant import FormantNode
 
-from waveforms.formant import FormantWaveform
+from waveforms.noise import NoiseWaveform
 
-class FormantWaveformNode:
+class NoiseWaveformNode:
     def __init__(self, tag, sample_rate):
         formant_tag = tag.find('formant')
 
@@ -10,4 +10,4 @@ class FormantWaveformNode:
 
         formant = formant_node.formant
 
-        self.waveform = FormantWaveform(formant, sample_rate)
+        self.waveform = NoiseWaveform(formant, sample_rate)
