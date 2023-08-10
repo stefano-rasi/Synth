@@ -15,7 +15,7 @@ class FormantNode:
         curve = curve_node.curve
 
         if tag.has_attr('scale'):
-            if tag['scale'] == 'log':
+            if tag['scale'].startswith('log'):
                 log = True
             else:
                 log = False

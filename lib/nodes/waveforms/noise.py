@@ -10,4 +10,4 @@ class NoiseWaveformNode:
 
         formant = formant_node.formant
 
-        self.waveform = NoiseWaveform(formant, sample_rate)
+        self.waveform = NoiseWaveform(formant, sample_rate, lazy=False)
