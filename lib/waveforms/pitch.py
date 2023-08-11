@@ -39,15 +39,11 @@ class PitchWaveform:
             pitch_start_log = math.log2(pitch_start)
 
             start_power = (pitch_stop_log - pitch_log) / (pitch_stop_log - pitch_start_log)
+
             stop_power = 1 - start_power
 
-            stop_amplitude = power_to_amplitude(stop_power)
-            start_amplitude = power_to_amplitude(start_power)
-
-            amplitude_factor = 1 / (start_amplitude + stop_amplitude)
-
-            stop_amplitude *= amplitude_factor
-            start_amplitude *= amplitude_factor
+            stop_amplitude = power_to_amplitude(stop_power, -18)
+            start_amplitude = power_to_amplitude(start_power, -18)
 
         stop_waveform = waveform_stop['waveform'].waveform(pitch, sample_rate)
         start_waveform = waveform_start['waveform'].waveform(pitch, sample_rate)

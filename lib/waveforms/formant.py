@@ -6,18 +6,13 @@ import numpy as np
 class FormantWaveform:
     SCALE = 4
 
-    def __init__(self, formant, sample_rate, harmonics=None):
-        self.harmonics = harmonics
-
+    def __init__(self, formant, sample_rate):
         self.formant = formant.formant(sample_rate)
 
     def waveform(self, pitch, sample_rate):
         max_freq = int(round((sample_rate / pitch / 2))) - 1
 
-        if self.harmonics is None:
-            harmonics = np.repeat(1, max_freq)
-        else:
-            harmonics = self.harmonics[:max_freq]
+        harmonics = np.repeat(1, max_freq)
 
         wavelength = int(round(sample_rate / pitch * self.SCALE))
 
