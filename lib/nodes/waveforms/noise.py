@@ -10,4 +10,12 @@ class NoiseWaveformNode:
 
         formant = formant_node.formant
 
-        self.waveform = NoiseWaveform(formant, sample_rate, lazy=False)
+        if tag.has_attr('lazy'):
+            if tag['lazy'] == 'false':
+                lazy = False
+            else:
+                lazy = True
+        else:
+            lazy = True
+
+        self.waveform = NoiseWaveform(formant, sample_rate, lazy=lazy)
